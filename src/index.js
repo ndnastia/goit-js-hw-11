@@ -1,15 +1,15 @@
 import { Notify } from 'notiflix';
-// import axios from 'axios';
+import axios from 'axios';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
-// const axios = require('axios').default;
+axios.defaults.baseURL = 'https://pixabay.com/api/';
 
 const form = document.querySelector('.search-form');
 const markup = document.querySelector('.gallery');
 const loadMore = document.querySelector('.load-more')
 
-
+let page = 1;
 form.addEventListener('submit', onSubmit);
 
 
@@ -20,7 +20,7 @@ function onSubmit(evt) {
     const inputValue = evt.currentTarget.elements.searchQuery.value.trim();
     console.log(inputValue);
 
-    let page = 1;
+    
     if (inputValue === '') {
             Notify.warning(
               'Sorry, there are no images matching your search query. Please try again.'
@@ -50,38 +50,6 @@ function onSubmit(evt) {
     
     
     
-    
-    
-    
-    
-     loadMore.addEventListener('click', onClick);
-     function onClick() {
-       page += 1;
-       simpleLightBox.destroy();
-       loadMore.style.display = 'none';
-
-       searchPicture()
-         .then(data => {
-           const totalPages = Math.ceil(data.totalHits / perPage);
-           markup.innerHTML = createMarkup(data.hits);
-           simpleLightBox = new SimpleLightbox('.gallery a').refresh();
-           loadMore.style.display = 'block';
-
-           if (page > totalPages) {
-             Notify.failure(
-               "We're sorry, but you've reached the end of search results."
-             );
-             loadMore.style.display = 'none';
-           }
-         })
-         .catch(err => {
-           console.log(err);
-           return;
-         });
-     }
-    
-    
-    
 async function searchPicture() {
     const KEY = '36050321-b79e46b27631ddd2509fd0134';
     const params = new URLSearchParams({
@@ -93,7 +61,7 @@ async function searchPicture() {
         page: page,
         per_page: 40,
     });
-    const response = await axios.get('https://pixabay.com/api/', {params});
+    const response = await axios.get('https://pixabay.com/api/',{params});
     return response.data;  
     }
     
@@ -128,4 +96,30 @@ function createMarkup(arr) {
 </a>`
       )
       .join('');
+}
+
+loadMore.addEventListener('click', onClick);
+function onClick() {
+  page += 1;
+  simpleLightBox.destroy();
+  loadMore.style.display = 'none';
+
+  searchPicture()
+    .then(data => {
+      const totalPages = Math.ceil(data.totalHits / perPage);
+      markup.innerHTML = createMarkup(data.hits);
+      simpleLightBox = new SimpleLightbox('.gallery a').refresh();
+      loadMore.style.display = 'block';
+
+      if (page > totalPages) {
+        Notify.failure(
+          "We're sorry, but you've reached the end of search results."
+        );
+        loadMore.style.display = 'none';
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      return;
+    });
 }

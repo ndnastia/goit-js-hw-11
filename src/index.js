@@ -102,14 +102,14 @@ loadMore.addEventListener('click', onClick);
 function onClick() {
   page += 1;
   simpleLightBox.destroy();
-  loadMore.style.display = 'none';
+  
 
   searchPicture()
     .then(data => {
       const totalPages = Math.ceil(data.totalHits / perPage);
       markup.innerHTML = createMarkup(data.hits);
       simpleLightBox = new SimpleLightbox('.gallery a').refresh();
-      loadMore.style.display = 'block';
+      
 
       if (page > totalPages) {
         Notify.failure(

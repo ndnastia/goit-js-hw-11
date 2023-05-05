@@ -1,9 +1,9 @@
 import { Notify } from 'notiflix';
-import axios from 'axios';
+// import axios from 'axios';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
-const axios = require('axios').default;
+// const axios = require('axios').default;
 
 const form = document.querySelector('.search-form');
 const markup = document.querySelector('.gallery');

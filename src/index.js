@@ -102,13 +102,11 @@ loadMore.addEventListener('click', onClick);
 function onClick() {
   page += 1;
   simpleLightBox.destroy();
-  
+  loadMore.style.display = 'none';
 
   searchPicture()
     .then(data => {
       const totalPages = Math.ceil(data.totalHits / perPage);
-      markup.innerHTML = createMarkup(data.hits);
-      simpleLightBox = new SimpleLightbox('.gallery a').refresh();
       
 
       if (page > totalPages) {
@@ -116,6 +114,12 @@ function onClick() {
           "We're sorry, but you've reached the end of search results."
         );
         loadMore.style.display = 'none';
+        return
+      } else {
+        markup.innerHTML = createMarkup(data.hits);
+      simpleLightBox = new SimpleLightbox('.gallery a').refresh();
+        loadMore.style.display = 'block';
+        return;
       }
     })
     .catch(err => {

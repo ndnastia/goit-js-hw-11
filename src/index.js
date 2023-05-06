@@ -17,7 +17,7 @@ form.addEventListener('submit', onSubmit);
 
 function onSubmit(evt) {
     evt.preventDefault();
-
+    const inputValue = evt.currentTarget.elements.searchQuery.value.trim();
     
     console.log(inputValue);
 
@@ -49,13 +49,7 @@ function onSubmit(evt) {
           form.reset();
         });
   
-  // return inputValue;
-    
-}
-
-
-async function searchPicture(evt) {
-const inputValue = evt.currentTarget.elements.searchQuery.value.trim();
+async function searchPicture() {
   const KEY = '36050321-b79e46b27631ddd2509fd0134';
   const params = new URLSearchParams({
     key: KEY,
@@ -68,7 +62,39 @@ const inputValue = evt.currentTarget.elements.searchQuery.value.trim();
   });
   const response = await axios.get('https://pixabay.com/api/', { params });
   return response.data;
+  }
+  loadMore.addEventListener('click', onClick);
+  function onClick() {
+    page += 1;
+    simpleLightBox.destroy();
+    loadMore.style.display = 'none';
+
+    searchPicture()
+      .then(data => {
+        const totalPages = Math.ceil(data.totalHits / perPage);
+
+        if (page > totalPages) {
+          Notify.failure(
+            "We're sorry, but you've reached the end of search results."
+          );
+          loadMore.style.display = 'none';
+          return;
+        } else {
+          markup.innerHTML = createMarkup(data.hits);
+          simpleLightBox = new SimpleLightbox('.gallery a').refresh();
+          loadMore.style.display = 'block';
+          return;
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        return;
+      });
+  }
 }
+
+
+
 
 function createMarkup(arr) {
     return arr
@@ -97,32 +123,3 @@ function createMarkup(arr) {
       .join('');
 }
 
-loadMore.addEventListener('click', onClick);
-function onClick() {
-  page += 1;
-  simpleLightBox.destroy();
-  loadMore.style.display = 'none';
-
-  searchPicture()
-    .then(data => {
-      const totalPages = Math.ceil(data.totalHits / perPage);
-      
-
-      if (page > totalPages) {
-        Notify.failure(
-          "We're sorry, but you've reached the end of search results."
-        );
-        loadMore.style.display = 'none';
-        return
-      } else {
-        markup.innerHTML = createMarkup(data.hits);
-      simpleLightBox = new SimpleLightbox('.gallery a').refresh();
-        loadMore.style.display = 'block';
-        return;
-      }
-    })
-    .catch(err => {
-      console.log(err);
-      return;
-    });
-}

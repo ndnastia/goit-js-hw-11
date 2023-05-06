@@ -10,6 +10,7 @@ const markup = document.querySelector('.gallery');
 const loadMore = document.querySelector('.load-more')
 
 let page = 1;
+const simpleLightBox = new SimpleLightbox;
 form.addEventListener('submit', onSubmit);
 
 
@@ -47,29 +48,26 @@ function onSubmit(evt) {
         .finally(() => {
           form.reset();
         });
+  
+  return inputValue;
     
-    
-    
-async function searchPicture() {
-    const KEY = '36050321-b79e46b27631ddd2509fd0134';
-    const params = new URLSearchParams({
-        key: KEY,
-        q: inputValue,
-        image_type: 'photo',
-        orientation: 'horizontal',
-        safesearch: 'true',
-        page: page,
-        per_page: 40,
-    });
-    const response = await axios.get('https://pixabay.com/api/',{params});
-    return response.data;  
-    }
-    
-   
 }
 
 
-
+async function searchPicture() {
+  const KEY = '36050321-b79e46b27631ddd2509fd0134';
+  const params = new URLSearchParams({
+    key: KEY,
+    q: inputValue,
+    image_type: 'photo',
+    orientation: 'horizontal',
+    safesearch: 'true',
+    page: page,
+    per_page: 40,
+  });
+  const response = await axios.get('https://pixabay.com/api/', { params });
+  return response.data;
+}
 
 function createMarkup(arr) {
     return arr

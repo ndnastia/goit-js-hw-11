@@ -10,7 +10,7 @@ const markup = document.querySelector('.gallery');
 const loadMore = document.querySelector('.load-more')
 
 let page = 1;
-const simpleLightBox = new SimpleLightbox;
+const simpleLightBox = new SimpleLightbox('.gallery a');
 form.addEventListener('submit', onSubmit);
 
 
@@ -37,7 +37,7 @@ function onSubmit(evt) {
             );
           } else {
             markup.innerHTML = createMarkup(data.hits);
-            simpleLightBox = new SimpleLightbox('.gallery a').refresh();
+            simpleLightBox.refresh();
             loadMore.style.display = 'block';
           }
         })
@@ -81,7 +81,7 @@ async function searchPicture() {
           return;
         } else {
           markup.innerHTML = createMarkup(data.hits);
-          simpleLightBox = new SimpleLightbox('.gallery a').refresh();
+          simpleLightBox.refresh();
           loadMore.style.display = 'block';
           return;
         }

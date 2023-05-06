@@ -78,7 +78,8 @@ async function searchPicture(query, page, perPage) {
 
 
 loadMore.addEventListener('click', onClick);
-function onClick() {
+function onClick(evt) {
+  evt.preventDefault();
   page += 1;
   loadMore.style.display = 'none';
 

@@ -13,6 +13,7 @@ let query = '';
 let page = 1;
 let simpleLightBox;
 const perPage = 40;
+let isAlertVisible = false;
 
 simpleLightBox = new SimpleLightbox('.gallery a');
 form.addEventListener('submit', onSubmit);
@@ -80,14 +81,16 @@ async function searchPicture(query, page, perPage) {
 loadMore.addEventListener('click', onClick);
 function onClick(evt) {
   evt.preventDefault();
-  
-
-  loadMore.style.display = 'none';
+  const totalPages = Math.ceil(data.totalHits / perPage);
+if (page > totalPages) {
+  return toggleAlertPopup();
+}
+  // loadMore.style.display = 'none';
 
   searchPicture(query, page, perPage)
     .then(data => {
       page += 1;
-      const totalPages = Math.ceil(data.totalHits / perPage);
+      
       if (page >= totalPages) {
         Notify.failure(
           "We're sorry, but you've reached the end of search results."
@@ -133,3 +136,14 @@ function createMarkup(arr) {
       .join('');
 }
 
+function toggleAlertPopup() {
+  if (isAlertVisible) {
+    return;
+  }
+  isAlertVisible = true;
+  loadMore.classList.add('is-visible');
+  setTimeout(() => {
+    loadMore.classList.remove('is-visible');
+    isAlertVisible = false;
+  }, 3000);
+}

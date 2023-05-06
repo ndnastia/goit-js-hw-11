@@ -89,10 +89,11 @@ function onClick(evt) {
       // const totalPages = Math.ceil(data.totalHits / perPage);
 
       if (perPage >= data.totalHits) {
-        Notify.failure(
+        loadMore.style.display = 'none';
+        return Notify.failure(
           "We're sorry, but you've reached the end of search results."
         );
-        loadMore.style.display = 'none';
+        
       } else {
         markup.innerHTML = createMarkup(data.hits);
         simpleLightBox = new SimpleLightbox('.gallery a').refresh();

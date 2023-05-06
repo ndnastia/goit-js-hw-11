@@ -80,15 +80,15 @@ async function searchPicture(query, page, perPage) {
 loadMore.addEventListener('click', onClick);
 function onClick(evt) {
   evt.preventDefault();
-  page += 1;
+  // page += 1;
   perPage += 40;
   loadMore.style.display = 'none';
 
   searchPicture(query, page, perPage)
     .then(data => {
-      const totalPages = Math.ceil(data.totalHits / perPage);
+      // const totalPages = Math.ceil(data.totalHits / perPage);
 
-      if (page >= totalPages) {
+      if (perPage >= data.totalHits) {
         Notify.failure(
           "We're sorry, but you've reached the end of search results."
         );

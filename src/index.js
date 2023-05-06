@@ -23,7 +23,7 @@ function onSubmit(evt) {
     evt.preventDefault();
   const inputValue = evt.currentTarget.elements.searchQuery.value.trim();
   page = 1;
-  query = e.currentTarget.elements.searchQuery.value.trim();
+  query = evt.currentTarget.elements.searchQuery.value.trim();
     
     console.log(inputValue);
 

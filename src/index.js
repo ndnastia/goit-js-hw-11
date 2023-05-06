@@ -12,7 +12,7 @@ const loadMore = document.querySelector('.load-more')
 let query = '';
 let page = 1;
 let simpleLightBox;
-let perPage = 40;
+const perPage = 40;
 
 simpleLightBox = new SimpleLightbox('.gallery a');
 form.addEventListener('submit', onSubmit);
@@ -80,20 +80,19 @@ async function searchPicture(query, page, perPage) {
 loadMore.addEventListener('click', onClick);
 function onClick(evt) {
   evt.preventDefault();
-  // page += 1;
-  perPage += 40;
+  
+
   loadMore.style.display = 'none';
 
   searchPicture(query, page, perPage)
     .then(data => {
-      // const totalPages = Math.ceil(data.totalHits / perPage);
-
-      if (perPage >= data.totalHits) {
-        loadMore.style.display = 'none';
-        return Notify.failure(
+      page += 1;
+      const totalPages = Math.ceil(data.totalHits / perPage);
+      if (page >= totalPages) {
+        Notify.failure(
           "We're sorry, but you've reached the end of search results."
         );
-        
+        loadMore.style.display = 'none';
       } else {
         markup.innerHTML = createMarkup(data.hits);
         simpleLightBox = new SimpleLightbox('.gallery a').refresh();

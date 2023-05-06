@@ -18,7 +18,7 @@ form.addEventListener('submit', onSubmit);
 function onSubmit(evt) {
     evt.preventDefault();
 
-    const inputValue = evt.currentTarget.elements.searchQuery.value.trim();
+    
     console.log(inputValue);
 
     
@@ -49,12 +49,13 @@ function onSubmit(evt) {
           form.reset();
         });
   
-  return inputValue;
+  // return inputValue;
     
 }
 
 
-async function searchPicture() {
+async function searchPicture(evt) {
+const inputValue = evt.currentTarget.elements.searchQuery.value.trim();
   const KEY = '36050321-b79e46b27631ddd2509fd0134';
   const params = new URLSearchParams({
     key: KEY,

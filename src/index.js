@@ -9,15 +9,21 @@ const form = document.querySelector('.search-form');
 const markup = document.querySelector('.gallery');
 const loadMore = document.querySelector('.load-more')
 
+let query = '';
 let page = 1;
-const simpleLightBox = new SimpleLightbox('.gallery a');
+let simpleLightBox;
+const perPage = 40;
+
+simpleLightBox = new SimpleLightbox('.gallery a');
 form.addEventListener('submit', onSubmit);
 
 
 
 function onSubmit(evt) {
     evt.preventDefault();
-    const inputValue = evt.currentTarget.elements.searchQuery.value.trim();
+  const inputValue = evt.currentTarget.elements.searchQuery.value.trim();
+  page = 1;
+  query = e.currentTarget.elements.searchQuery.value.trim();
     
     console.log(inputValue);
 
@@ -29,7 +35,7 @@ function onSubmit(evt) {
             return;
           }
 
-      searchPicture()
+      searchPicture(query, page, perPage)
         .then(data => {
           if (data.totalHits === 0) {
             Notify.failure(
@@ -37,7 +43,7 @@ function onSubmit(evt) {
             );
           } else {
             markup.innerHTML = createMarkup(data.hits);
-            simpleLightBox.refresh();
+            simpleLightBox = new SimpleLightbox('.gallery a').refresh();
             loadMore.style.display = 'block';
           }
         })
@@ -49,51 +55,56 @@ function onSubmit(evt) {
           form.reset();
         });
   
-async function searchPicture() {
+}
+
+async function searchPicture(query, page, perPage) {
   const KEY = '36050321-b79e46b27631ddd2509fd0134';
-  const params = new URLSearchParams({
-    key: KEY,
-    q: inputValue,
-    image_type: 'photo',
-    orientation: 'horizontal',
-    safesearch: 'true',
-    page: page,
-    per_page: 40,
-  });
-  const response = await axios.get('https://pixabay.com/api/', { params });
+  // const params = new URLSearchParams({
+  //   key: KEY,
+  //   q: inputValue,
+  //   image_type: 'photo',
+  //   orientation: 'horizontal',
+  //   safesearch: 'true',
+  //   page: page,
+  //   per_page: 40,
+  // });
+  const response = await axios.get(
+    `?key=${KEY}&q=${query}&image_type=photo&orientation=horizontal&safesearch=true&page=${page}&per_page=${perPage}`
+  );
   return response.data;
-  }
-  loadMore.addEventListener('click', onClick);
-  function onClick() {
-    page += 1;
-    simpleLightBox.destroy();
-    loadMore.style.display = 'none';
-
-    searchPicture()
-      .then(data => {
-        const totalPages = Math.ceil(data.totalHits / perPage);
-
-        if (page > totalPages) {
-          Notify.failure(
-            "We're sorry, but you've reached the end of search results."
-          );
-          loadMore.style.display = 'none';
-          return;
-        } else {
-          markup.innerHTML = createMarkup(data.hits);
-          simpleLightBox.refresh();
-          loadMore.style.display = 'block';
-          return;
-        }
-      })
-      .catch(err => {
-        console.log(err);
-        return;
-      });
-  }
 }
 
 
+
+
+loadMore.addEventListener('click', onClick);
+function onClick() {
+  page += 1;
+  simpleLightBox.destroy();
+  loadMore.style.display = 'none';
+
+  searchPicture(query, page, perPage)
+    .then(data => {
+      const totalPages = Math.ceil(data.totalHits / perPage);
+
+      if (page > totalPages) {
+        Notify.failure(
+          "We're sorry, but you've reached the end of search results."
+        );
+        loadMore.style.display = 'none';
+        return;
+      } else {
+        markup.innerHTML = createMarkup(data.hits);
+        simpleLightBox = new SimpleLightbox('.gallery a').refresh();
+        loadMore.style.display = 'block';
+        return;
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      return;
+    });
+}
 
 
 function createMarkup(arr) {

@@ -12,7 +12,7 @@ const loadMore = document.querySelector('.load-more')
 let query = '';
 let page = 1;
 let simpleLightBox;
-const perPage = 40;
+let perPage = 40;
 
 simpleLightBox = new SimpleLightbox('.gallery a');
 form.addEventListener('submit', onSubmit);
@@ -81,13 +81,14 @@ loadMore.addEventListener('click', onClick);
 function onClick(evt) {
   evt.preventDefault();
   page += 1;
+  perPage += 40;
   loadMore.style.display = 'none';
 
   searchPicture(query, page, perPage)
     .then(data => {
       const totalPages = Math.ceil(data.totalHits / perPage);
 
-      if (page > totalPages) {
+      if (page >= totalPages) {
         Notify.failure(
           "We're sorry, but you've reached the end of search results."
         );

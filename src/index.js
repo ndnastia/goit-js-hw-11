@@ -93,7 +93,7 @@ function onClick(evt) {
         );
         loadMore.style.display = 'none';
       } else {
-        markup.innerHTML = createMarkup(data.hits);
+        markup.insertAdjacentHTML('beforeend', createMarkup(data.hits))
         simpleLightBox = new SimpleLightbox('.gallery a').refresh();
         loadMore.style.display = 'block';
       }
